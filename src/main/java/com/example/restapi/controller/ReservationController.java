@@ -20,6 +20,7 @@ public class ReservationController {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(cal.getTime());
     }
+/*
 @GetMapping()
 public ResponseEntity<Reservation> createReservation()
 {
@@ -29,12 +30,17 @@ public ResponseEntity<Reservation> createReservation()
     return ResponseEntity.status(HttpStatus.CREATED).header("Reserved by", customer.getName()+" "+ customer.getSurname())
             .body(reservation);
 }
+
+
+
 @PostMapping()
 @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Reservation> showReservation(){
-        Customer customer = new Customer(1,"Jasmin","Sauken");
+      // Customer customer = new Customer(1,"Jasmin","Sauken");
         Table table = new Table(1,"free");
         Reservation reservation = new Reservation(table,customer,now());
         return ResponseEntity.ok(reservation);
+
     }
+*/
 }

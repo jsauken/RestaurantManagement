@@ -1,15 +1,29 @@
 package com.example.restapi.model;
 
-public class Customer {
-    int customerId;
-    String name;
-    String surname;
+import jakarta.persistence.*;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
-    public Customer(int customerId, String name, String surname) {
-        this.customerId = customerId;
-        this.name = name;
-        this.surname = surname;
-    }
+import java.util.Date;
+
+@Entity
+@Table(name = "customer")
+@AllArgsConstructor
+@NoArgsConstructor
+
+public class Customer {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int customerId;
+    @Column(name = "customer_name", nullable = false)
+    private String name;
+    @Column(name = "customer_surname", nullable = false)
+    private String surname;
+    @Column(name = "createdAt", nullable = false)
+    private Date createdAt;
+    @Column(name = "modifiedAt")
+    private Date modifiedAt;
 
     public int getCustomerId() {
         return customerId;

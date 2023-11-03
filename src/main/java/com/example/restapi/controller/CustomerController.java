@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("api/customer")
 public class CustomerController {
-
+/**
     @GetMapping("{id}")
     public ResponseEntity<Customer> getCustomer(@PathVariable("id") int customerId){
         ArrayList<Customer> customers=new ArrayList<>();
@@ -22,5 +22,5 @@ public class CustomerController {
         customers.add(customer3);
         return ResponseEntity.ok(customers.get(customerId-1));
     }
-
+**/
 }
