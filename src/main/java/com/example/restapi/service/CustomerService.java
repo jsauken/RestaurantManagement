@@ -8,4 +8,6 @@ public interface CustomerService {
     ArrayList<CustomerDTO> getAllCustomers();
     CustomerDTO getById(int id);
     CustomerDTO createCustomer(CustomerDTO customer);
+    CustomerDTO updateCustomer(int id, CustomerDTO updatedCustomerDTO);
+     void deleteCustomer(int id);
 }

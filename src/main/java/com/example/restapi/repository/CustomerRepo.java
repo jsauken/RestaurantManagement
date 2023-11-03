@@ -1,5 +1,6 @@
 package com.example.restapi.repository;
 
+
 import com.example.restapi.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 
