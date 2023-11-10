@@ -5,6 +5,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -21,9 +22,10 @@ public class Customer {
     @Column(name = "customer_surname", nullable = false)
     private String surname;
     @Column(name = "createdAt", nullable = false)
-    private Date createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "modifiedAt")
     private Date modifiedAt;
+
 
     public int getCustomerId() {
         return customerId;

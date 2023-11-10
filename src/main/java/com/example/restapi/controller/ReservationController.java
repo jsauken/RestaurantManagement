@@ -1,10 +1,5 @@
 package com.example.restapi.controller;
 
-import com.example.restapi.model.Customer;
-import com.example.restapi.model.Reservation;
-import com.example.restapi.model.Table;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;

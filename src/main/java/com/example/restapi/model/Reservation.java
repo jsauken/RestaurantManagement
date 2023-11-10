@@ -3,18 +3,18 @@ package com.example.restapi.model;
 public class Reservation {
 
     long id;
-    Table table;
+    RestrauntTable restrauntTable;
     Customer customer;
     String reservationTime;
 
 
 
-    public Table getTable() {
-        return table;
+    public RestrauntTable getTable() {
+        return restrauntTable;
     }
 
-    public void setTable(Table table) {
-        this.table = table;
+    public void setTable(RestrauntTable restrauntTable) {
+        this.restrauntTable = restrauntTable;
     }
 
     public Customer getCustomer() {

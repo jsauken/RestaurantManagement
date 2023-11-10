@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Entity
-@jakarta.persistence.Table(name = "table")
+@Table(name = "restaurant_table")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Table {
+public class RestrauntTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int tableNum;

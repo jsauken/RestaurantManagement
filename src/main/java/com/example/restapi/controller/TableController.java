@@ -1,6 +1,6 @@
 package com.example.restapi.controller;
 
-import com.example.restapi.model.Table;
+import com.example.restapi.model.RestrauntTable;
 import com.example.restapi.model.TableAssignment;
 import com.example.restapi.model.Waiter;
 import org.springframework.http.HttpStatus;
@@ -16,60 +16,60 @@ public class TableController {
     private List<Waiter> waiters = new ArrayList<>();
 
     private List<TableAssignment> tableAssignments = new ArrayList<>();
-    private List<Table> tables = new ArrayList<>();
+    private List<RestrauntTable> restrauntTables = new ArrayList<>();
 
     @GetMapping("/{tableNum}")
-    public ResponseEntity<Table> getTable(@PathVariable("tableNum") int tableNum) {
-        if (tableNum <= 0 || tableNum > tables.size()) {
+    public ResponseEntity<RestrauntTable> getTable(@PathVariable("tableNum") int tableNum) {
+        if (tableNum <= 0 || tableNum > restrauntTables.size()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        Table table = tables.get(tableNum - 1);
-        return ResponseEntity.ok(table);
+        RestrauntTable restrauntTable = restrauntTables.get(tableNum - 1);
+        return ResponseEntity.ok(restrauntTable);
     }
 
     @GetMapping()
-    public ResponseEntity<List<Table>> getAllTables() {
-        return ResponseEntity.ok(tables);
+    public ResponseEntity<List<RestrauntTable>> getAllTables() {
+        return ResponseEntity.ok(restrauntTables);
     }
 
     @PostMapping()
-    public ResponseEntity<Table> createTable(@RequestBody Table table) {
-        tables.add(table);
-        return ResponseEntity.status(HttpStatus.CREATED).body(table);
+    public ResponseEntity<RestrauntTable> createTable(@RequestBody RestrauntTable restrauntTable) {
+        restrauntTables.add(restrauntTable);
+        return ResponseEntity.status(HttpStatus.CREATED).body(restrauntTable);
     }
 
     @PutMapping("/{tableNum}")
-    public ResponseEntity<Table> updateTable(@PathVariable("tableNum") int tableNum, @RequestBody Table updatedTable) {
-        if (tableNum <= 0 || tableNum > tables.size()) {
+    public ResponseEntity<RestrauntTable> updateTable(@PathVariable("tableNum") int tableNum, @RequestBody RestrauntTable updatedRestrauntTable) {
+        if (tableNum <= 0 || tableNum > restrauntTables.size()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        tables.set(tableNum - 1, updatedTable);
-        return ResponseEntity.ok(updatedTable);
+        restrauntTables.set(tableNum - 1, updatedRestrauntTable);
+        return ResponseEntity.ok(updatedRestrauntTable);
     }
 
     @DeleteMapping("/{tableNum}")
     public ResponseEntity<Void> deleteTable(@PathVariable("tableNum") int tableNum) {
-        if (tableNum <= 0 || tableNum > tables.size()) {
+        if (tableNum <= 0 || tableNum > restrauntTables.size()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        tables.remove(tableNum - 1);
+        restrauntTables.remove(tableNum - 1);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
     @PostMapping("/{tableNum}/assign-waiter")
-    public ResponseEntity<Table> assignWaiterToTable(
+    public ResponseEntity<RestrauntTable> assignWaiterToTable(
             @PathVariable("tableNum") int tableNum,
             @RequestBody TableAssignment tableAssignment) {
-        if (tableNum <= 0 || tableNum > tables.size() || tableAssignment.getWaiterId() <= 0) {
+        if (tableNum <= 0 || tableNum > restrauntTables.size() || tableAssignment.getWaiterId() <= 0) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        Table table = tables.get(tableNum - 1);
+        RestrauntTable restrauntTable = restrauntTables.get(tableNum - 1);
         int waiterId = tableAssignment.getWaiterId();
 
         if (waiterId <= waiters.size()) {
             Waiter waiter = waiters.get(waiterId - 1);
             tableAssignments.add(tableAssignment);
-            return ResponseEntity.ok(table);
+            return ResponseEntity.ok(restrauntTable);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }

@@ -1,26 +1,67 @@
 package com.example.restapi.controller;
 
+import com.example.restapi.DTO.CustomerDTO;
 import com.example.restapi.model.Customer;
+import com.example.restapi.service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/customer")
+@RequestMapping("/api/customers")
 public class CustomerController {
-/**
-    @GetMapping("{id}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable("id") int customerId){
-        ArrayList<Customer> customers=new ArrayList<>();
-        Customer customer1 = new Customer(1,"Jasmin","Sauken");
-        Customer customer2 = new Customer(2,"Aidana","Megembaeva");
-        Customer customer3 = new Customer(3,"Aidana","Pazylkhan");
-        customers.add(customer1);
-        customers.add(customer2);
-        customers.add(customer3);
-        return ResponseEntity.ok(customers.get(customerId-1));
+    @Autowired
+    private CustomerService customerService;
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable int id) {
+        CustomerDTO customer = customerService.getById(id);
+        return ResponseEntity.ok(customer);
     }
-**/
+
+    @PostMapping
+    public ResponseEntity<CustomerDTO> createCustomer(@RequestBody CustomerDTO customerDTO) {
+        CustomerDTO createdCustomer = customerService.createCustomer(customerDTO);
+        return ResponseEntity.ok(createdCustomer);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable int id, @RequestBody CustomerDTO updatedCustomerDTO) {
+        CustomerDTO updatedCustomer = customerService.updateCustomer(id, updatedCustomerDTO);
+        return ResponseEntity.ok(updatedCustomer);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCustomer(@PathVariable int id) {
+        customerService.deleteCustomer(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<CustomerDTO>> getAllCustomers(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+
+        Page<CustomerDTO> customers = customerService.getAllCustomers(page, size);
+        return ResponseEntity.ok(customers);
+    }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<CustomerDTO>> getAllCustomersWithMultiColumnSorting() {
+        List<CustomerDTO> customers = customerService.getAllCustomersWithMultiColumnSorting();
+        return ResponseEntity.ok(customers);
+    }
+    @GetMapping("/search")
+    public ResponseEntity<List<CustomerDTO>> searchCustomers(
+            @RequestParam(name = "keyword") String keyword) {
+
+        List<CustomerDTO> customers = customerService.searchCustomersByName(keyword);
+        return ResponseEntity.ok(customers);
+    }
 }
