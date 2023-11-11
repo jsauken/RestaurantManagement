@@ -98,8 +98,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<CustomerDTO> getAllCustomersWithMultiColumnSorting() {
         Sort sort = Sort.by(
-                Sort.Order.asc("customer_name"),
-                Sort.Order.asc("customer_surname")
+                Sort.Order.asc("name"),
+                Sort.Order.asc("surname")
         );
 
         List<Customer> customers = customerRepo.findAll(sort);

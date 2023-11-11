@@ -1,11 +1,11 @@
 package com.example.restapi.controller;
 
 import com.example.restapi.DTO.CustomerDTO;
-import com.example.restapi.model.Customer;
+
 import com.example.restapi.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
