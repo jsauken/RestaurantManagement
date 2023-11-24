@@ -1,27 +1,34 @@
 package com.example.restapi.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.List;
+
+@Entity
+@Table(name = "waiter")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class Waiter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int waiterId;
+
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 
-    public Waiter(int waiterId, String name) {
-        this.waiterId = waiterId;
-        this.name = name;
-    }
-
-    public int getWaiterId() {
-        return waiterId;
-    }
-
-    public void setWaiterId(int waiterId) {
-        this.waiterId = waiterId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @OneToMany(mappedBy = "assignedWaiter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RestaurantTable> assignedTables;
+    @Column(name = "role", nullable = false)
+    private Role roles = Role.ADMIN;
 }

@@ -49,9 +49,15 @@ public class CustomerController {
             @RequestParam(name = "size", defaultValue = "10") int size) {
 
         Page<CustomerDTO> customers = customerService.getAllCustomers(page, size);
+
         return ResponseEntity.ok(customers);
     }
-
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<?> deleteAllCustomers() {
+        // Implement the logic to delete all customers here
+        customerService.deleteAllCustomers();
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/sorted")
     public ResponseEntity<List<CustomerDTO>> getAllCustomersWithMultiColumnSorting() {
         List<CustomerDTO> customers = customerService.getAllCustomersWithMultiColumnSorting();

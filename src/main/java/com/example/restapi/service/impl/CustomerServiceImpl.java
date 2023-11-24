@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,8 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private CustomerRepo customerRepo;
 
-    @Override
-    public ArrayList<CustomerDTO> getAllCustomers() {
+ /**   public ArrayList<CustomerDTO> getAllCustomers() {
         List<Customer> customers = customerRepo.findAll();
         ArrayList<CustomerDTO> customerDTOs = new ArrayList<>();
 
@@ -34,35 +34,43 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customerDTOs;
     }
+  **/
 
     @Override
     public CustomerDTO getById(int id){
         Customer customer = customerRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Customer not found with ID: " + id));
         return convertToCustomerDTO(customer);
     }
-    private CustomerDTO convertToCustomerDTO(Customer customer) {
+    public CustomerDTO convertToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setName(customer.getName());
         customerDTO.setSurname(customer.getSurname());
-
+        customerDTO.setEmail(customer.getEmail());
+        customerDTO.setPassword(customer.getPassword());
+        customerDTO.setPhoneNumber(customer.getPhoneNumber());
+        customerDTO.setRoles(customer.getRoles());
         return customerDTO;
     }
 
-    private Customer convertToCustomer(CustomerDTO customerDTO) {
+    public Customer convertToCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
+        //customer.setCustomerId(customerDTO.getCustomerId());
         customer.setName(customerDTO.getName());
         customer.setSurname(customerDTO.getSurname());
-
+        customer.setEmail(customerDTO.getEmail());
+        customer.setPassword(customerDTO.getPassword());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber());
+        customer.setRoles(customerDTO.getRoles());
         return customer;
     }
 
     @Override
     public CustomerDTO createCustomer(CustomerDTO customerDTO){
         Customer customer = convertToCustomer(customerDTO);
-        customer = customerRepo.save(customer); // Save the customer and get the saved entity
 
-        // Update the customerDTO with the generated ID
+        customer = customerRepo.save(customer);
+
         customerDTO.setCustomerId(customer.getCustomerId());
 
         return customerDTO; // Return the updated customerDTO
@@ -85,6 +93,10 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "ID", (long) id));
         customerRepo.delete(customer);
     }
+    @Override
+    public void deleteAllCustomers() {
+        customerRepo.deleteAll();
+    }
 //pagination
     @Override
     public Page<CustomerDTO> getAllCustomers(int page, int size) {
@@ -93,6 +105,19 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customers.map(this::convertToCustomerDTO);
     }
+    @Override
+    public boolean checkPassword(CustomerDTO customerDTO, String password) {
+        return customerDTO.getPassword().equals(password);
+
+    }
+
+
+    @Override
+    public Optional<CustomerDTO> getByEmail(String email) {
+        Optional<Customer> customerOptional = customerRepo.findByEmail(email);
+        return customerOptional.map(this::convertToCustomerDTO);
+    }
+
     //sort
 
     @Override
@@ -115,5 +140,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         return customers.stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
     }
+
 
 }

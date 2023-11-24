@@ -1,41 +1,63 @@
 package com.example.restapi.controller;
-
+import com.example.restapi.DTO.ReservationDTO;
+import com.example.restapi.service.ReservationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.List;
 
 @RestController
-@RequestMapping("api/reservation")
+@RequestMapping("/api/reservations")
 public class ReservationController {
-    public static final String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
 
-    public static String now() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-        return sdf.format(cal.getTime());
-    }
-/*
-@GetMapping()
-public ResponseEntity<Reservation> createReservation()
-{
-    Customer customer = new Customer(1,"Jasmin","Sauken");
-    Table table = new Table(1,"free");
-    Reservation reservation = new Reservation(table,customer,now());
-    return ResponseEntity.status(HttpStatus.CREATED).header("Reserved by", customer.getName()+" "+ customer.getSurname())
-            .body(reservation);
-}
+    @Autowired
+    private ReservationService reservationService;
 
-
-
-@PostMapping()
-@ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Reservation> showReservation(){
-      // Customer customer = new Customer(1,"Jasmin","Sauken");
-        Table table = new Table(1,"free");
-        Reservation reservation = new Reservation(table,customer,now());
+    @GetMapping("/{id}")
+    public ResponseEntity<ReservationDTO> getReservationById(@PathVariable long id) {
+        ReservationDTO reservation = reservationService.getById(id);
         return ResponseEntity.ok(reservation);
-
     }
-*/
+
+
+    @PostMapping
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+        ReservationDTO createdReservation = reservationService.createReservation(reservationDTO);
+        return ResponseEntity.ok(createdReservation);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ReservationDTO> updateReservation(@PathVariable long id, @RequestBody ReservationDTO updatedReservationDTO) {
+        ReservationDTO updatedReservation = reservationService.updateReservation(id, updatedReservationDTO);
+        return ResponseEntity.ok(updatedReservation);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteReservation(@PathVariable long id) {
+        reservationService.deleteReservation(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<ReservationDTO>> getAllReservationsWithMultiColumnSorting() {
+        List<ReservationDTO> reservations = reservationService.getAllReservationsWithMultiColumnSorting();
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ReservationDTO>> searchReservations(
+            @RequestParam(name = "keyword") String keyword) {
+        List<ReservationDTO> reservations = reservationService.searchReservationsByCustomerName(keyword);
+        return ResponseEntity.ok(reservations);
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<Page<ReservationDTO>> getAllReservationsPaged(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<ReservationDTO> reservations = reservationService.getAllReservationsPaged(page, size);
+        return ResponseEntity.ok(reservations);
+    }
 }

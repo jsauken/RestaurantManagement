@@ -10,25 +10,21 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "reservation")
+@Table(name = "restaurant_table")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class Reservation {
+public class RestaurantTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
-    @ManyToOne
-    @JoinColumn(name = "table_id")
-    private RestaurantTable tableReserved;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
-    @Column(name = "number_of_guests", nullable = false)
-    private int numberOfGuests;
-    @Column(name = "reservation_time", nullable = false)
-    private LocalDateTime reservationTime;
+    private int tableId;
+    @Column(name = "table_number", nullable = false)
+    int tableNum;
+    @Column(name = "seat_number", nullable = false)
+    int seatNum; //number of seats
+    @Column(name = "status", nullable = false)
+    String status;
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "modifiedAt")
@@ -36,5 +32,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+    @ManyToOne
+    @JoinColumn(name = "assigned_waiter_id")
+    private Waiter assignedWaiter;
 
 }
