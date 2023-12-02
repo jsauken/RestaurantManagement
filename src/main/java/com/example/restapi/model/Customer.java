@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -41,5 +42,6 @@ public class Customer {
     private Restaurant restaurant;
     @Column(name = "roles", nullable = false)
     private String roles = Role.USER.getAuthority();
+
 
 }

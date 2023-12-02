@@ -24,7 +24,7 @@ public class Reservation {
     private RestaurantTable tableReserved;
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private Customer customer;  //one Reservation have one Customer, and one Customer can have multiple Reservations
     @Column(name = "number_of_guests", nullable = false)
     private int numberOfGuests;
     @Column(name = "reservation_time", nullable = false)
@@ -36,5 +36,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+    @ManyToOne
+    @JoinColumn(name = "assigned_waiter_id")
+    private Waiter assignedWaiter; //same as Customer
 
 }

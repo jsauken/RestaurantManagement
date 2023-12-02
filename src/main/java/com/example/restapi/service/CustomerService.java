@@ -1,6 +1,7 @@
 package com.example.restapi.service;
 
 import com.example.restapi.DTO.CustomerDTO;
+import com.example.restapi.DTO.ReservationDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;

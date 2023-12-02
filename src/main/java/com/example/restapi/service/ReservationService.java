@@ -11,6 +11,8 @@ public interface ReservationService {
     Page<ReservationDTO> getAllReservationsPaged(int page, int size);
     ReservationDTO getById(long id);
     List<ReservationDTO> searchReservationsByCustomerName(String keyword);
+     List<ReservationDTO> searchReservationsByCustomerEmail(String customerEmail);
+
     List<ReservationDTO> getAllReservationsWithMultiColumnSorting();
     ReservationDTO createReservation(ReservationDTO reservationDTO);
     ReservationDTO updateReservation(long id, ReservationDTO updatedReservationDTO);

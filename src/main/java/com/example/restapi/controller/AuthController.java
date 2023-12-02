@@ -22,13 +22,9 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) {
+    public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest authRequest) throws AuthException {
         final JwtResponse token;
-        try {
             token = authService.login(authRequest);
-        } catch (AuthException e) {
-            throw new RuntimeException(e);
-        }
         return ResponseEntity.ok(token);
     }
 

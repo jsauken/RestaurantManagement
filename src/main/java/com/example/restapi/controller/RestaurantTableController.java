@@ -4,6 +4,7 @@ import com.example.restapi.model.RestaurantTable;
 import com.example.restapi.model.Waiter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,9 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/table")
+@PreAuthorize("hasAuthority('ADMIN')")
 public class RestaurantTableController {
-    private List<Waiter> waiters = new ArrayList<>();
-
 
     private List<RestaurantTable> restaurantTables = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class RestaurantTableController {
         if (tableNum <= 0 || tableNum > restaurantTables.size()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        RestaurantTable restaurantTable = restaurantTables.get(tableNum - 1);
+        RestaurantTable restaurantTable = restaurantTables.get(tableNum);
         return ResponseEntity.ok(restaurantTable);
     }
 

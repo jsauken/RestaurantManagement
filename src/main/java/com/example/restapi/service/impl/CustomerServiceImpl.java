@@ -41,7 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepo.findById(id).orElseThrow(() -> new NoSuchElementException("Customer not found with ID: " + id));
         return convertToCustomerDTO(customer);
     }
-    public CustomerDTO convertToCustomerDTO(Customer customer) {
+    public static CustomerDTO convertToCustomerDTO(Customer customer) {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setCustomerId(customer.getCustomerId());
         customerDTO.setName(customer.getName());
@@ -53,7 +53,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerDTO;
     }
 
-    public Customer convertToCustomer(CustomerDTO customerDTO) {
+    public static Customer convertToCustomer(CustomerDTO customerDTO) {
         Customer customer = new Customer();
         //customer.setCustomerId(customerDTO.getCustomerId());
         customer.setName(customerDTO.getName());
@@ -103,7 +103,7 @@ public class CustomerServiceImpl implements CustomerService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Customer> customers = customerRepo.findAll(pageable);
 
-        return customers.map(this::convertToCustomerDTO);
+        return customers.map(CustomerServiceImpl::convertToCustomerDTO);
     }
     @Override
     public boolean checkPassword(CustomerDTO customerDTO, String password) {
@@ -115,7 +115,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Optional<CustomerDTO> getByEmail(String email) {
         Optional<Customer> customerOptional = customerRepo.findByEmail(email);
-        return customerOptional.map(this::convertToCustomerDTO);
+        return customerOptional.map(CustomerServiceImpl::convertToCustomerDTO);
     }
 
     //sort
@@ -130,7 +130,7 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customers = customerRepo.findAll(sort);
 
         return customers.stream()
-                .map(this::convertToCustomerDTO)
+                .map(CustomerServiceImpl::convertToCustomerDTO)
                 .collect(Collectors.toList());
     }
  //search
@@ -138,7 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
     public List<CustomerDTO> searchCustomersByName(String keyword) {
         List<Customer> customers = customerRepo.findByNameContaining(keyword);
 
-        return customers.stream().map(this::convertToCustomerDTO).collect(Collectors.toList());
+        return customers.stream().map(CustomerServiceImpl::convertToCustomerDTO).collect(Collectors.toList());
     }
 
 

@@ -32,8 +32,6 @@ public class RestaurantTable {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-    @ManyToOne
-    @JoinColumn(name = "assigned_waiter_id")
-    private Waiter assignedWaiter;
+
 
 }

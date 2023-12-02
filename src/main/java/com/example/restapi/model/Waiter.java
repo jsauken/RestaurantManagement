@@ -21,14 +21,8 @@ public class Waiter {
 
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "password", nullable = false)
-    private String password;
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "assignedWaiter", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<RestaurantTable> assignedTables;
-    @Column(name = "role", nullable = false)
-    private Role roles = Role.ADMIN;
 }

@@ -13,4 +13,6 @@ public interface ReservationRepo extends JpaRepository<Reservation, Long> {
 
     List<Reservation> findByCustomerNameContaining(String keyword);
     List<Reservation> findAll(Sort sort);
+    List<Reservation> findByCustomerEmail(String customerEmail);
+
 }
