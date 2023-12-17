@@ -3,6 +3,7 @@ import com.example.restapi.DTO.ReservationDTO;
 import com.example.restapi.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,16 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationDTO> createReservation(@RequestBody ReservationDTO reservationDTO) {
+        ResponseEntity<ReservationDTO> response;
         ReservationDTO createdReservation = reservationService.createReservation(reservationDTO);
-        return ResponseEntity.ok(createdReservation);
+        if (createdReservation != null) {
+            response = ResponseEntity.ok(createdReservation);
+        } else {
+            response = ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ReservationDTO());
+        }
+
+        return response;
     }
 
     @PutMapping("/{id}")

@@ -45,16 +45,18 @@ public class Controller {
         if (reservations != null && !reservations.isEmpty()) {
             String reservationsMessage = getMessage("userReservation", request);
             StringBuilder reservationDetails = new StringBuilder();
-            reservationDetails.append(reservationsMessage).append(" ").append(userEmail).append(": ");
+            reservationDetails.append(reservationsMessage).append(" ").append(userEmail).append(": \n");
 
             for (ReservationDTO reservation : reservations) {
 
                 reservationDetails.append(getMessage("reservationId", request))
+                        .append(" ")
                         .append(reservation.getId())
-                        .append(", ")
+                        .append("\n ")
                         .append(getMessage("reservationTime", request))
+                        .append(": ")
                         .append(reservation.getReservationTime())
-                        .append("; ");
+                        .append("\n");
             }
             return ResponseEntity.ok(reservationDetails.toString());
         } else {

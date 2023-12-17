@@ -25,14 +25,21 @@ public class TranslationService {
     public Translation saveTranslation(Translation translation) {
         return translationRepo.save(translation);
     }
+
     public String getTranslationByKeyAndLocale(String key, Locale locale) {
         String langCode = locale.getLanguage();
         Translation translation = translationRepo.findByKeyNameAndLangCode(key, langCode)
-                .orElse(null); // IF NOT FOUND
+                .orElse(null);
 
-        System.out.println("Key: " + key + ", LangCode: " + langCode); // TO CHECK
+        //CHECKING
+        System.out.println("Key: " + key + ", LangCode: " + langCode);
 
-        return (translation != null) ? translation.getTranslationValue() : "Translation not found";
+        if (translation != null) {
+            return translation.getTranslationValue();
+        } else {
+            System.out.println("Translation not found for Key: " + key + ", LangCode: " + langCode);
+
+            return "Translation not found for key: " + key;
+        }
     }
-
 }

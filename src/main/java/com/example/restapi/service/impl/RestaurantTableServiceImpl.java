@@ -7,6 +7,7 @@ import com.example.restapi.service.RestaurantTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -61,7 +62,7 @@ public class RestaurantTableServiceImpl implements RestaurantTableService {
         existingTable.setTableNum(updatedRestaurantTableDTO.getTableNum());
         existingTable.setSeatNum(updatedRestaurantTableDTO.getSeatNum());
         existingTable.setStatus(updatedRestaurantTableDTO.getStatus());
-
+        existingTable.setModifiedAt(LocalDateTime.now());
         restaurantTableRepo.save(existingTable);
 
         return convertToTableDTO(existingTable);

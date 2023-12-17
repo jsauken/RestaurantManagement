@@ -2,6 +2,7 @@ package com.example.restapi.controller;
 
 import com.example.restapi.DTO.CustomerDTO;
 
+
 import com.example.restapi.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,7 +57,7 @@ public class CustomerController {
     }
     @DeleteMapping("/deleteAll")
     public ResponseEntity<?> deleteAllCustomers() {
-        // Implement the logic to delete all customers here
+
         customerService.deleteAllCustomers();
         return ResponseEntity.ok().build();
     }

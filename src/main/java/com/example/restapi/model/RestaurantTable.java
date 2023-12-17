@@ -28,7 +28,7 @@ public class RestaurantTable {
     @Column(name = "createdAt", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "modifiedAt")
-    private Date modifiedAt;
+    private LocalDateTime modifiedAt;
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;

@@ -1,7 +1,6 @@
 package com.example.restapi.controller;
 
 import com.example.restapi.model.RestaurantTable;
-import com.example.restapi.model.Waiter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -83,7 +84,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         existingCustomer.setName(updatedCustomerDTO.getName());
         existingCustomer.setSurname(updatedCustomerDTO.getSurname());
-
+        existingCustomer.setModifiedAt(LocalDateTime.now());
         existingCustomer = customerRepo.save(existingCustomer);
         return convertToCustomerDTO(existingCustomer);
     }

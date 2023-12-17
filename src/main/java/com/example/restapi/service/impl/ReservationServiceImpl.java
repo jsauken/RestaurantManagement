@@ -9,6 +9,7 @@ import com.example.restapi.model.Reservation;
 
 import com.example.restapi.repository.ReservationRepo;
 import com.example.restapi.service.ReservationService;
+import com.example.restapi.service.RestaurantTableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -33,6 +35,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationRepo reservationRepo;
+    @Autowired
+    private RestaurantTableService restaurantTableService;
 
 
     public List<ReservationDTO> getAllReservations() {
@@ -70,18 +74,25 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setAssignedWaiter(convertToWaiter(reservationDTO.getWaiter()));
         return reservation;
     }
+
     @Override
     public ReservationDTO createReservation(ReservationDTO reservationDTO) {
-        Reservation reservation = convertToReservation(reservationDTO);
-        reservation = reservationRepo.save(reservation);
-        return convertToReservationDTO(reservation);
+        int tableId = reservationDTO.getTableReserved().getTableId(); // Assuming the DTO has this field
+        RestaurantTableDTO table = restaurantTableService.getById(tableId);
+        if (table.getStatus().equals("available")) {
+            Reservation reservation = convertToReservation(reservationDTO);
+            table.setStatus("booked");
+            reservation = reservationRepo.save(reservation);
+            return convertToReservationDTO(reservation);
+        } else {
+            return null;
+        }
     }
     @Override
     public List<ReservationDTO> searchReservationsByCustomerEmail(String customerEmail) {
-        // Implement the logic to search reservations by customer email
+
         List<Reservation> reservationsByCustomer = reservationRepo.findByCustomerEmail(customerEmail);
 
-        // Convert Reservation entities to DTOs
         return reservationsByCustomer.stream()
                 .map(this::convertToReservationDTO)
                 .collect(Collectors.toList());
@@ -95,7 +106,7 @@ public class ReservationServiceImpl implements ReservationService {
         existingReservation.setCustomer(convertToCustomer(updatedReservationDTO.getCustomer()));
         existingReservation.setNumberOfGuests(updatedReservationDTO.getNumberOfGuests());
         existingReservation.setReservationTime(updatedReservationDTO.getReservationTime());
-
+        existingReservation.setModifiedAt(LocalDateTime.now());
         existingReservation = reservationRepo.save(existingReservation);
         return convertToReservationDTO(existingReservation);
     }
