@@ -52,19 +52,23 @@ public class ReservationController {
     }
 
     @GetMapping("/sorted")
-    public ResponseEntity<List<ReservationDTO>> getAllReservationsWithMultiColumnSorting() {
-        List<ReservationDTO> reservations = reservationService.getAllReservationsWithMultiColumnSorting();
+    public ResponseEntity<Page<ReservationDTO>> getAllReservationsWithMultiColumnSorting(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<ReservationDTO> reservations  = reservationService.getAllReservationsWithMultiColumnSorting(page,size);
         return ResponseEntity.ok(reservations);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ReservationDTO>> searchReservations(
-            @RequestParam(name = "keyword") String keyword) {
-        List<ReservationDTO> reservations = reservationService.searchReservationsByCustomerName(keyword);
+    public ResponseEntity<Page<ReservationDTO>> searchReservations(
+            @RequestParam(name = "keyword") String keyword,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "10") int size) {
+        Page<ReservationDTO> reservations = reservationService.searchReservationsByCustomerName(keyword,page,size);
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/paged")
+    @GetMapping()
     public ResponseEntity<Page<ReservationDTO>> getAllReservationsPaged(
             @RequestParam(name = "page", defaultValue = "0") int page,
             @RequestParam(name = "size", defaultValue = "10") int size) {

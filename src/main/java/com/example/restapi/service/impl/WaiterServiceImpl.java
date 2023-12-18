@@ -2,6 +2,7 @@ package com.example.restapi.service.impl;
 
 import com.example.restapi.DTO.WaiterDTO;
 import com.example.restapi.Exceptions.ResourceNotFoundException;
+import com.example.restapi.model.Restaurant;
 import com.example.restapi.model.Waiter;
 import com.example.restapi.repository.WaiterRepo;
 import com.example.restapi.service.WaiterService;
@@ -63,12 +64,15 @@ public class WaiterServiceImpl implements WaiterService {
         waiterDTO.setRestaurantId(waiter.getRestaurant().getRestaurantId());
         return waiterDTO;
     }
-
     public static Waiter convertToWaiter(WaiterDTO waiterDTO) {
         Waiter waiter = new Waiter();
         waiter.setWaiterId(waiterDTO.getWaiterId());
         waiter.setName(waiterDTO.getName());
-        waiter.getRestaurant().setRestaurantId(waiterDTO.getRestaurantId());
+        Restaurant restaurant = new Restaurant();
+        restaurant.setRestaurantId(waiterDTO.getRestaurantId());
+        waiter.setRestaurant(restaurant);
         return waiter;
     }
+
+
 }

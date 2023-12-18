@@ -10,10 +10,10 @@ import java.util.List;
 public interface ReservationService {
     Page<ReservationDTO> getAllReservationsPaged(int page, int size);
     ReservationDTO getById(long id);
-    List<ReservationDTO> searchReservationsByCustomerName(String keyword);
-     List<ReservationDTO> searchReservationsByCustomerEmail(String customerEmail);
+    Page<ReservationDTO> searchReservationsByCustomerName(String keyword, int page, int size);
+    List<ReservationDTO> searchReservationsByCustomerEmail(String customerEmail);
+    Page<ReservationDTO> getAllReservationsWithMultiColumnSorting(int page, int size);
 
-    List<ReservationDTO> getAllReservationsWithMultiColumnSorting();
     ReservationDTO createReservation(ReservationDTO reservationDTO);
     ReservationDTO updateReservation(long id, ReservationDTO updatedReservationDTO);
     void deleteReservation(long id);

@@ -19,10 +19,10 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "table_id")
     private RestaurantTable tableReserved;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "customer_id")
     private Customer customer;  //one Reservation have one Customer, and one Customer can have multiple Reservations
     @Column(name = "number_of_guests", nullable = false)
@@ -33,10 +33,10 @@ public class Reservation {
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(name = "modifiedAt")
     private LocalDateTime modifiedAt;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "assigned_waiter_id")
     private Waiter assignedWaiter; //same as Customer
 

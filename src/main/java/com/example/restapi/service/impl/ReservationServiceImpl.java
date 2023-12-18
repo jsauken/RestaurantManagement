@@ -3,19 +3,28 @@ package com.example.restapi.service.impl;
 import com.example.restapi.DTO.CustomerDTO;
 import com.example.restapi.DTO.ReservationDTO;
 import com.example.restapi.DTO.RestaurantTableDTO;
+import com.example.restapi.DTO.WaiterDTO;
 import com.example.restapi.Exceptions.ResourceNotFoundException;
 
+import com.example.restapi.model.Customer;
 import com.example.restapi.model.Reservation;
 
+import com.example.restapi.model.Restaurant;
+import com.example.restapi.model.Waiter;
 import com.example.restapi.repository.ReservationRepo;
+import com.example.restapi.service.CustomerService;
 import com.example.restapi.service.ReservationService;
 import com.example.restapi.service.RestaurantTableService;
+import com.example.restapi.service.WaiterService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
@@ -37,7 +46,12 @@ public class ReservationServiceImpl implements ReservationService {
     private ReservationRepo reservationRepo;
     @Autowired
     private RestaurantTableService restaurantTableService;
-
+    @Autowired
+    private CustomerService customerService;
+    @Autowired
+    private WaiterService waiterService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public List<ReservationDTO> getAllReservations() {
         List<Reservation> reservations = reservationRepo.findAll();
@@ -76,18 +90,40 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    @Transactional
     public ReservationDTO createReservation(ReservationDTO reservationDTO) {
-        int tableId = reservationDTO.getTableReserved().getTableId(); // Assuming the DTO has this field
+        int tableId = reservationDTO.getTableReserved().getTableId();
         RestaurantTableDTO table = restaurantTableService.getById(tableId);
-        if (table.getStatus().equals("available")) {
-            Reservation reservation = convertToReservation(reservationDTO);
-            table.setStatus("booked");
-            reservation = reservationRepo.save(reservation);
-            return convertToReservationDTO(reservation);
+
+        if (table != null && table.getStatus().equals("available")) {
+            Customer customer = convertToCustomer(customerService.getById(reservationDTO.getCustomer().getCustomerId()));
+            Waiter waiter = convertToWaiter(waiterService.getById(reservationDTO.getWaiter().getWaiterId()));
+
+            if (customer != null && waiter != null) {
+                Reservation reservation = convertToReservation(reservationDTO);
+                reservation.setCustomer(customer);
+                reservation.setAssignedWaiter(waiter);
+
+
+                table.setStatus("booked");
+                restaurantTableService.updateTable(table.getTableId(), table);
+
+                Waiter mergedWaiter = entityManager.merge(waiter);
+                reservation.setAssignedWaiter(mergedWaiter);
+
+                reservationRepo.save(reservation);
+                return convertToReservationDTO(reservation);
+            } else {
+                throw new ResourceNotFoundException("Customer or Waiter", "ID",
+                        (long) ((customer == null) ? reservationDTO.getCustomer().getCustomerId() :
+                                reservationDTO.getWaiter().getWaiterId()));
+            }
         } else {
-            return null;
+            throw new ResourceNotFoundException("Table", "ID", (long) tableId);
         }
     }
+
+
     @Override
     public List<ReservationDTO> searchReservationsByCustomerEmail(String customerEmail) {
 
@@ -125,29 +161,25 @@ public class ReservationServiceImpl implements ReservationService {
 
         return reservations.map(this::convertToReservationDTO);
     }
-
-    public List<ReservationDTO> getAllReservationsWithMultiColumnSorting() {
+    @Override
+    public Page<ReservationDTO> getAllReservationsWithMultiColumnSorting(int page, int size) {
         Sort sort = Sort.by(
                 Sort.Order.asc("reservationTime"),
                 Sort.Order.asc("numberOfGuests")
         );
-
-        List<Reservation> reservations = reservationRepo.findAll(sort);
-
-        return reservations.stream()
-                .map(this::convertToReservationDTO)
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<Reservation> reservations = reservationRepo.findAll(pageable);
+        return reservations.map(this::convertToReservationDTO);
     }
 
     @Override
-    public List<ReservationDTO> searchReservationsByCustomerName(String keyword) {
-        List<Reservation> reservations = reservationRepo.findByCustomerNameContaining(keyword);
-
-        return reservations.stream()
-                .map(this::convertToReservationDTO)
-                .collect(Collectors.toList());
+    public Page<ReservationDTO> searchReservationsByCustomerName(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = (Page<Reservation>) reservationRepo.findByCustomerNameContaining(keyword,pageable);
+        return reservations.map(this::convertToReservationDTO);
     }
 }
+
 
 
 
